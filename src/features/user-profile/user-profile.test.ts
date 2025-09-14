@@ -1,11 +1,11 @@
 import { buildApp } from "@/src/app.js";
-import { describe, onTestFinished } from "vitest";
+import { onTestFinished } from "vitest";
+import { createFakeUserProfile } from "../user-authentication/user-authentication.factories.js";
+import { generateJwtToken } from "../user-authentication/user-authentication.helpers.js";
 import {
   createUserProfile,
   deleteUserProfile,
 } from "../user-profile/user-profile.models.js";
-import { createFakeUserProfile } from "../user-authentication/user-authentication.factories.js";
-import { generateJwtToken } from "../user-authentication/user-authentication.helpers.js";
 
 export async function setUp(numberOfProfiles: number) {
   const app = buildApp();
@@ -20,7 +20,7 @@ export async function setUp(numberOfProfiles: number) {
 
   await createUserProfile(authenticatedUser);
 
-  const token = await generateJwtToken(authenticatedUser);
+  const token = generateJwtToken(authenticatedUser);
 
   onTestFinished(async () => {
     try {

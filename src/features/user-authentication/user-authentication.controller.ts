@@ -1,24 +1,25 @@
 import { validateBody } from "@/src/middleware/validate.js";
 import type { Request, Response } from "express";
-import z from "zod";
-import { getUserProfileByEmail } from "../user-profile/user-profile.models.js";
 import {
+  createUserProfile,
+  getUserProfileByEmail,
+} from "../user-profile/user-profile.models.js";
+import { MESSAGES } from "./user-authentication.constant.js";
+import {
+  clearJwtCookie,
   generateJwtToken,
+  hashPassword,
   isPasswordValid,
   setJwtCookie,
 } from "./user-authentication.helpers.js";
-
-const LoginSchema = z.object({
-  email: z.email(),
-  password: z.string().min(6).max(100),
-});
+import { LoginSchema, RegisterSchema } from "./user-authentication.schema.js";
 
 export async function login(req: Request, res: Response) {
   const body = await validateBody(LoginSchema, req, res);
 
   const user = await getUserProfileByEmail(body.email);
   if (!user) {
-    return res.status(401).json({ message: "Invalid email or password" });
+    return res.status(401).json({ message: MESSAGES.INVALID_CREDENTIALS });
   }
 
   const isValidPassword = await isPasswordValid(
@@ -27,10 +28,39 @@ export async function login(req: Request, res: Response) {
   );
 
   if (!isValidPassword) {
-    return res.status(401).json({ message: "Invalid email or password" });
+    return res.status(401).json({ message: MESSAGES.INVALID_CREDENTIALS });
   }
   const token = generateJwtToken(user);
 
   setJwtCookie(res, token);
-  return res.status(200).json({ message: "Login successful" });
+  return res.status(200).json({ message: MESSAGES.LOGIN_SUCCESS });
+}
+
+export async function register(req: Request, res: Response) {
+  const body = await validateBody(RegisterSchema, req, res);
+
+  const existingUser = await getUserProfileByEmail(body.email);
+  if (existingUser) {
+    return res.status(409).json({ message: MESSAGES.ALREADY_IN_USE });
+  }
+
+  const hashedPassword = await hashPassword(body.password);
+
+  const userProfile = await createUserProfile({
+    email: body.email,
+    hashedPassword,
+    name: body.name,
+  });
+
+  const token = generateJwtToken(userProfile);
+  setJwtCookie(res, token);
+
+  return res
+    .status(201)
+    .json({ message: MESSAGES.REGISTRATION_SUCCESS, userId: userProfile.id });
+}
+
+export async function logout(_req: Request, res: Response) {
+  clearJwtCookie(res);
+  return res.status(200).json({ message: MESSAGES.LOG_OUT_SUCCESS });
 }

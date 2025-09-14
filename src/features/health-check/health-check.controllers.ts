@@ -6,5 +6,5 @@ export const healthCheckHandler = async (_: Request, response: Response) => {
     timeStamp: Date.now(),
     uptime: process.uptime(),
   };
-  response.status(200).json(body);
+  return response.status(200).json(body);
 };
