@@ -2,7 +2,7 @@ import morgan from "morgan";
 import { buildApp } from "./app.js";
 
 const app = buildApp();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 app.get("/", (_, res) => {
   res.send("Hello, Express with TypeScript!");
