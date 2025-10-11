@@ -7,10 +7,14 @@ import {
 import { MESSAGES } from "./user-authentication.constant.js";
 import {
   clearJwtCookie,
+  clearRefreshTokenCookie,
   generateJwtToken,
+  generateRefreshToken,
+  getRefreshTokenFromCookie,
   hashPassword,
   isPasswordValid,
   setJwtCookie,
+  setRefreshTokenCookie,
 } from "./user-authentication.helpers.js";
 import { LoginSchema, RegisterSchema } from "./user-authentication.schema.js";
 
@@ -31,8 +35,9 @@ export async function login(req: Request, res: Response) {
     return res.status(401).json({ message: MESSAGES.INVALID_CREDENTIALS });
   }
   const token = generateJwtToken(user);
-
+  const refreshToken = generateRefreshToken(user);
   setJwtCookie(res, token);
+  setRefreshTokenCookie(res, refreshToken);
   return res.status(200).json({ message: MESSAGES.LOGIN_SUCCESS });
 }
 
@@ -53,7 +58,9 @@ export async function register(req: Request, res: Response) {
   });
 
   const token = generateJwtToken(userProfile);
+  const refreshToken = generateRefreshToken(userProfile);
   setJwtCookie(res, token);
+  setRefreshTokenCookie(res, refreshToken);
 
   return res
     .status(201)
@@ -62,5 +69,29 @@ export async function register(req: Request, res: Response) {
 
 export async function logout(_req: Request, res: Response) {
   clearJwtCookie(res);
+  clearRefreshTokenCookie(res);
   return res.status(200).json({ message: MESSAGES.LOG_OUT_SUCCESS });
+}
+
+interface RefreshTokenPayload {
+  id: string;
+  email: string;
+}
+
+export async function refreshToken(req: Request, res: Response) {
+  try {
+    const user = getRefreshTokenFromCookie(req) as RefreshTokenPayload;
+
+    // Check if user still exists or is active
+    const existingUser = await getUserProfileByEmail(user.email);
+    if (!existingUser) {
+      return res.status(401).json({ message: MESSAGES.INVALID_REFRESH_TOKEN });
+    }
+    const payload = { id: existingUser.id, email: existingUser.email };
+    const accessToken = generateJwtToken(payload);
+    setJwtCookie(res, accessToken);
+    return res.status(200).json({ message: MESSAGES.ACCESS_TOKEN_REFRESHED });
+  } catch (error) {
+    return res.status(401).json({ message: MESSAGES.INVALID_REFRESH_TOKEN });
+  }
 }

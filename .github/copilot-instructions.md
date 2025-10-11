@@ -45,6 +45,13 @@
 - API routes should use pluralized resource names (e.g., `/profiles`, `/users`).
 - Use the current versioning approach (e.g., `/api/v1/...`).
 - Use camelCase for all function names.
+- prefer using function declaration syntax for named functions (e.g., `function myFunction() {}`).
+- Use arrow functions for anonymous functions (e.g., `const myFunc = () => {}`).
+- Use descriptive names for variables and functions.
+- Use `asyncHandler` for all async route handlers to catch errors.
+- Use `.js` extensions in import statements to match the compiled output.
+- Use `.ts` extensions in import statements within test files.
+- Use `import { Router } from "express";` for route files.
 
 - Use kebab-case for all feature files and folders (e.g., `user-profile.controller.ts`).
 - Use camelCase for utility files (e.g., `asyncHandler.ts`).

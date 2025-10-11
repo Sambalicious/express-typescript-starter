@@ -3,8 +3,65 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-
 dotenv.config();
+
+export const REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
+
+export function generateRefreshToken(userProfile: UserProfile) {
+  const tokenPayload: TokenPayload = {
+    id: userProfile.id,
+    email: userProfile.email,
+  };
+  const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+  if (!refreshTokenSecret) {
+    throw new Error("REFRESH_TOKEN_SECRET environment variable is not set");
+  }
+  return jwt.sign(tokenPayload, refreshTokenSecret, {
+    expiresIn: "7d", // 7 days
+    algorithm: "HS256",
+  });
+}
+
+export function setRefreshTokenCookie(response: Response, token: string) {
+  response.cookie(REFRESH_TOKEN_COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    path: "/",
+  });
+}
+
+export function clearRefreshTokenCookie(response: Response) {
+  response.clearCookie(REFRESH_TOKEN_COOKIE_NAME, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    path: "/",
+  });
+}
+
+export function getRefreshTokenFromCookie(request: Request) {
+  const token = request.cookies[REFRESH_TOKEN_COOKIE_NAME];
+  if (!token) {
+    throw new Error("Refresh token missing");
+  }
+  let decodedToken;
+  try {
+    decodedToken = jwt.verify(
+      token,
+      process.env.REFRESH_TOKEN_SECRET as string,
+      { algorithms: ["HS256"] }
+    );
+  } catch (err) {
+    throw new Error("Invalid or expired refresh token");
+  }
+  if (isTokenValid(decodedToken)) {
+    return decodedToken;
+  }
+  throw new Error("Invalid or expired refresh token");
+}
+
 export async function hashPassword(password: string) {
   return await bcrypt.hash(password, 10); // Placeholder for actual hashing logic
 }
@@ -21,7 +78,9 @@ export type TokenPayload = {
   email: string;
 };
 
-export function generateJwtToken(userProfile: UserProfile) {
+export function generateJwtToken(
+  userProfile: Pick<UserProfile, "id" | "email">
+) {
   const tokenPayload: TokenPayload = {
     id: userProfile.id,
     email: userProfile.email,
