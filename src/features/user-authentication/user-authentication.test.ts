@@ -8,6 +8,7 @@ import {
 import { MESSAGES } from "./user-authentication.constant.js";
 import { createFakeUserProfile } from "./user-authentication.factories.js";
 import { hashPassword } from "./user-authentication.helpers.js";
+import { faker } from "@faker-js/faker";
 interface SetUp {
   password: string;
 }
@@ -118,9 +119,9 @@ describe("/api/v1/register", () => {
     const actual = await request(app)
       .post("/api/v1/register")
       .send({
-        email: "test3@test.com",
+        email: faker.internet.email(),
         password: "password123",
-        name: "Test User",
+        name: faker.person.fullName(),
       })
       .expect(201);
 

@@ -1,5 +1,6 @@
 import { database } from "@/database.js";
 import type { Prisma } from "@prisma/client";
+import type { ProfileListSchemaType } from "./user-profile.schema.js";
 
 export function createUserProfile(profile: Prisma.UserProfileCreateInput) {
   return database.userProfile.create({ data: profile });
@@ -23,9 +24,16 @@ export function updateUserProfile(
   });
 }
 
-export function deleteUserProfile(userId: string) {
-  return database.userProfile.delete({ where: { id: userId } });
+export function deleteUserProfile(id: string) {
+  return database.userProfile.delete({ where: { id } });
 }
-export function listUserProfiles() {
-  return database.userProfile.findMany();
+export async function listUserProfiles({
+  page,
+  pageSize,
+}: ProfileListSchemaType) {
+  return database.userProfile.findMany({
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: { createdAt: "desc" },
+  });
 }
