@@ -237,6 +237,123 @@ export const swaggerDocument = {
         },
       },
     },
+    "/auth/login": {
+      post: {
+        summary: "Login",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  email: { type: "string", format: "email" },
+                  password: { type: "string", minLength: 6, maxLength: 100 },
+                },
+                required: ["email", "password"],
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Login successful",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          "401": {
+            description: "Invalid credentials",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/auth/register": {
+      post: {
+        summary: "Register",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  email: { type: "string", format: "email" },
+                  password: { type: "string", minLength: 6, maxLength: 100 },
+                  name: { type: "string", minLength: 2, maxLength: 100 },
+                },
+                required: ["email", "password", "name"],
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Registration successful",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+          "409": {
+            description: "Email already in use",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/auth/logout": {
+      post: {
+        summary: "Logout",
+        responses: {
+          "200": {
+            description: "Logout successful",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
 };
 
