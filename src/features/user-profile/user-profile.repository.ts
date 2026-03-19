@@ -14,7 +14,7 @@ export interface UserProfileRepository {
   findAll(options: ProfileListSchemaType): Promise<UserProfile[]>;
 }
 
-class PrismaUserProfileRepository implements UserProfileRepository {
+class UserProfileRepositoryImpl implements UserProfileRepository {
   findById(id: string) {
     return database.userProfile.findUnique({ where: { id } });
   }
@@ -44,4 +44,4 @@ class PrismaUserProfileRepository implements UserProfileRepository {
   }
 }
 
-export const userProfileRepository = new PrismaUserProfileRepository();
+export const userProfileRepository = new UserProfileRepositoryImpl();

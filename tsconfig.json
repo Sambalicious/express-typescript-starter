@@ -8,7 +8,7 @@
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
     "target": "esnext",
-
+   "esModuleInterop": true,    
     // For nodejs:
     "lib": ["esnext"],
     "types": ["node"],
@@ -42,6 +42,8 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true
+    "skipLibCheck": true, 
+    "forceConsistentCasingInFileNames": true,   
+        
   }
 }
