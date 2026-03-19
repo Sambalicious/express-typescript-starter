@@ -1,17 +1,17 @@
 import { asyncHandler } from "@/src/utils/asyncHandler.js";
 import { Router } from "express";
-import {
-  login,
-  logout,
-  refreshToken,
-  register,
-} from "./user-authentication.controller.js";
+
+import { UserAuthenticationController } from "./user-authentication.controller.js";
+import { UserAuthenticationService } from "./user-authentication.service.js";
+
+const authService = new UserAuthenticationService();
+const authController = new UserAuthenticationController(authService);
 
 const routes: Router = Router();
 
-routes.post("/login", asyncHandler(login));
-routes.post("/register", asyncHandler(register));
-routes.post("/logout", asyncHandler(logout));
-routes.post("/refresh", asyncHandler(refreshToken));
+routes.post("/login", asyncHandler(authController.login));
+routes.post("/register", asyncHandler(authController.register));
+routes.post("/logout", asyncHandler(authController.logout));
+routes.post("/refresh", asyncHandler(authController.refreshToken));
 
 export { routes as userAuthenticationRoutes };
