@@ -1,0 +1,8 @@
+model UserProfile {
+  id             String   @id @default(cuid(2))
+  email          String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  name           String   @default("")
+  hashedPassword String
+}

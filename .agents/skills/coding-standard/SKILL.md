@@ -427,15 +427,17 @@ export function Dashboard() {
 
 ```typescript
 // ✅ GOOD: Select only needed columns
-const { data } = await supabase
-  .from('markets')
-  .select('id, name, status')
-  .limit(10)
+const data = await prisma.market.findMany({
+  take: 10,
+  select: {
+    id: true,
+    name: true,
+    status: true,
+  },
+})
 
 // ❌ BAD: Select everything
-const { data } = await supabase
-  .from('markets')
-  .select('*')
+const data = await prisma.market.findMany()
 ```
 
 ## Testing Standards

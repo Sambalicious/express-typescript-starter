@@ -1,10 +1,7 @@
 import { buildApp } from "@/src/app.js";
 import request from "supertest";
 import { describe, expect, onTestFinished, test } from "vitest";
-import {
-  createUserProfile,
-  deleteUserProfile,
-} from "../user-profile/user-profile.models.js";
+import { userProfileRepository } from "../user-profile/user-profile.repository.ts";
 import { MESSAGES } from "./user-authentication.constant.js";
 import { createFakeUserProfile } from "./user-authentication.factories.js";
 import { hashPassword } from "./user-authentication.helpers.js";
@@ -14,14 +11,14 @@ interface SetUp {
 }
 async function setUp({ password }: SetUp) {
   const app = buildApp();
-  const savedUser = await createUserProfile(
+  const savedUser = await userProfileRepository.create(
     createFakeUserProfile({
       hashedPassword: await hashPassword(password),
     })
   );
 
   onTestFinished(async () => {
-    await deleteUserProfile(savedUser.id);
+    await userProfileRepository.delete(savedUser.id);
   });
 
   return { app, savedUser };

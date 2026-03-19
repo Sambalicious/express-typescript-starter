@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import { mapPrismaError } from "@/src/utils/prismaError.js";
 
 export interface AppError extends Error {
   status?: number;
@@ -12,10 +13,15 @@ export function errorHandler(
   res: Response,
   _next: NextFunction
 ) {
-  const status = err.status || 500;
+  const prismaError = mapPrismaError(err);
+  const normalizedError = prismaError || err;
+  const status = normalizedError.status || 500;
+  const details =
+    process.env.NODE_ENV === "production" ? undefined : normalizedError.details;
+
   res.status(status).json({
-    message: err.message || "Internal Server Error",
-    messageCode: err.messageCode || "INTERNAL_ERROR",
-    details: err.details || undefined,
+    message: normalizedError.message || "Internal Server Error",
+    messageCode: normalizedError.messageCode || "INTERNAL_ERROR",
+    details,
   });
 }

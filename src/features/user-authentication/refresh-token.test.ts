@@ -2,7 +2,7 @@ import { buildApp } from "@/src/app.js";
 import jwt from "jsonwebtoken";
 import request from "supertest";
 import { describe, expect, test } from "vitest";
-import { createUserProfile } from "../user-profile/user-profile.models.js";
+import { userProfileRepository } from "../user-profile/user-profile.repository.ts";
 import { MESSAGES } from "./user-authentication.constant.js";
 import { createFakeUserProfile } from "./user-authentication.factories.js";
 import {
@@ -15,7 +15,7 @@ describe("/refresh", () => {
   test("should issue a new access token when given a valid refresh token cookie", async () => {
     const app = buildApp();
     const user = createFakeUserProfile();
-    await createUserProfile(user);
+    await userProfileRepository.create(user);
     const refreshToken = generateRefreshToken(user);
     const res = await request(app)
       .post("/api/v1/refresh")
@@ -42,7 +42,7 @@ describe("/refresh", () => {
   test("should fail with 401 if refresh token is expired", async () => {
     const app = buildApp();
     const user = createFakeUserProfile();
-    await createUserProfile(user);
+    await userProfileRepository.create(user);
     // Create an expired token
     const expiredToken = jwt.sign(
       { id: user.id, email: user.email },
@@ -62,7 +62,7 @@ describe("/refresh", () => {
   test("should fail with 401 if refresh token is tampered", async () => {
     const app = buildApp();
     const user = createFakeUserProfile();
-    await createUserProfile(user);
+    await userProfileRepository.create(user);
     const refreshToken = generateRefreshToken(user) + "tampered";
     const res = await request(app)
       .post("/api/v1/refresh")

@@ -7,7 +7,7 @@ import {
   JWT_COOKIE_NAME,
 } from "../user-authentication/user-authentication.helpers.js";
 import { MESSAGES } from "./user-profile.constant.js";
-import { createUserProfile, deleteUserProfile } from "./user-profile.models.js";
+import { userProfileRepository } from "./user-profile.repository.js";
 interface SetUpOptions {
   numberOfProfiles?: number;
 }
@@ -16,12 +16,12 @@ async function setUp({ numberOfProfiles = 0 }: SetUpOptions) {
 
   const profiles = await Promise.all(
     Array.from({ length: numberOfProfiles }).map(() =>
-      createUserProfile(createFakeUserProfile())
+      userProfileRepository.create(createFakeUserProfile())
     )
   );
 
   const authenticatedUser = createFakeUserProfile();
-  await createUserProfile(authenticatedUser);
+  await userProfileRepository.create(authenticatedUser);
 
   const token = generateJwtToken(authenticatedUser);
 
@@ -33,7 +33,7 @@ async function setUp({ numberOfProfiles = 0 }: SetUpOptions) {
     try {
       await Promise.all(
         profileAndAuthenticatedUser.map((profile) =>
-          deleteUserProfile(profile.id)
+          userProfileRepository.delete(profile.id)
         )
       );
     } catch (error) {}

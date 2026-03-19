@@ -117,24 +117,33 @@ await db.query(query)
 
 #### ✅ ALWAYS Use Parameterized Queries
 ```typescript
-// Safe - parameterized query
-const { data } = await supabase
-  .from('users')
-  .select('*')
-  .eq('email', userEmail)
+// Safe - ORM parameterization via Prisma Client
+const users = await prisma.user.findMany({
+  where: { email: userEmail },
+  select: { id: true, email: true },
+})
 
-// Or with raw SQL
-await db.query(
-  'SELECT * FROM users WHERE email = $1',
-  [userEmail]
-)
+// Or with raw SQL through Prisma (tagged template is parameterized)
+await prisma.$queryRaw`
+  SELECT id, email
+  FROM users
+  WHERE email = ${userEmail}
+`
+
+// For dynamic SQL parts, use Prisma.sql and allowlists
+const orderBy = userSort === 'createdAt' ? Prisma.sql`"createdAt"` : Prisma.sql`"email"`
+await prisma.$queryRaw(Prisma.sql`
+  SELECT id, email
+  FROM users
+  ORDER BY ${orderBy}
+`)
 ```
 
 #### Verification Steps
 - [ ] All database queries use parameterized queries
 - [ ] No string concatenation in SQL
 - [ ] ORM/query builder used correctly
-- [ ] Supabase queries properly sanitized
+- [ ] Prisma raw queries use parameterized APIs (`$queryRaw`, not `$queryRawUnsafe`)
 
 ### 4. Authentication & Authorization
 
@@ -168,9 +177,9 @@ export async function deleteUser(userId: string, requesterId: string) {
 }
 ```
 
-#### Row Level Security (Supabase)
+#### Database Authorization Policies
 ```sql
--- Enable RLS on all tables
+-- If using PostgreSQL RLS, enable it on sensitive tables
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
 -- Users can only view their own data
@@ -187,7 +196,7 @@ CREATE POLICY "Users update own data"
 #### Verification Steps
 - [ ] Tokens stored in httpOnly cookies (not localStorage)
 - [ ] Authorization checks before sensitive operations
-- [ ] Row Level Security enabled in Supabase
+- [ ] Database access rules enforced (RLS, tenancy filters, or equivalent)
 - [ ] Role-based access control implemented
 - [ ] Session management secure
 
@@ -478,7 +487,7 @@ Before ANY production deployment:
 - [ ] **Error Handling**: No sensitive data in errors
 - [ ] **Logging**: No sensitive data logged
 - [ ] **Dependencies**: Up to date, no vulnerabilities
-- [ ] **Row Level Security**: Enabled in Supabase
+- [ ] **Database Access Controls**: Enforced consistently
 - [ ] **CORS**: Properly configured
 - [ ] **File Uploads**: Validated (size, type)
 - [ ] **Wallet Signatures**: Verified (if blockchain)
@@ -487,7 +496,7 @@ Before ANY production deployment:
 
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [Next.js Security](https://nextjs.org/docs/security)
-- [Supabase Security](https://supabase.com/docs/guides/auth)
+- [Prisma Raw Queries](https://www.prisma.io/docs/orm/prisma-client/queries/raw-database-access)
 - [Web Security Academy](https://portswigger.net/web-security)
 
 ---

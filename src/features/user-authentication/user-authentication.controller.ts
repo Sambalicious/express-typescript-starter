@@ -1,9 +1,6 @@
 import { validateBody } from "@/src/middleware/validate.js";
 import type { Request, Response } from "express";
-import {
-  createUserProfile,
-  getUserProfileByEmail,
-} from "../user-profile/user-profile.models.js";
+import { userProfileRepository } from "../user-profile/user-profile.repository.js";
 import { MESSAGES } from "./user-authentication.constant.js";
 import {
   clearJwtCookie,
@@ -21,7 +18,7 @@ import { LoginSchema, RegisterSchema } from "./user-authentication.schema.js";
 export async function login(req: Request, res: Response) {
   const body = await validateBody(LoginSchema, req, res);
 
-  const user = await getUserProfileByEmail(body.email);
+  const user = await userProfileRepository.findByEmail(body.email);
   if (!user) {
     return res.status(401).json({ message: MESSAGES.INVALID_CREDENTIALS });
   }
@@ -44,14 +41,14 @@ export async function login(req: Request, res: Response) {
 export async function register(req: Request, res: Response) {
   const body = await validateBody(RegisterSchema, req, res);
 
-  const existingUser = await getUserProfileByEmail(body.email);
+  const existingUser = await userProfileRepository.findByEmail(body.email);
   if (existingUser) {
     return res.status(409).json({ message: MESSAGES.ALREADY_IN_USE });
   }
 
   const hashedPassword = await hashPassword(body.password);
 
-  const userProfile = await createUserProfile({
+  const userProfile = await userProfileRepository.create({
     email: body.email,
     hashedPassword,
     name: body.name,
@@ -83,7 +80,7 @@ export async function refreshToken(req: Request, res: Response) {
     const user = getRefreshTokenFromCookie(req) as RefreshTokenPayload;
 
     // Check if user still exists or is active
-    const existingUser = await getUserProfileByEmail(user.email);
+    const existingUser = await userProfileRepository.findByEmail(user.email);
     if (!existingUser) {
       return res.status(401).json({ message: MESSAGES.INVALID_REFRESH_TOKEN });
     }
