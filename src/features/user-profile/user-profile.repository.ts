@@ -1,4 +1,5 @@
 import { database } from "@/database.js";
+import { BaseRepository, type PaginatedResult } from "@/src/utils/baseRepository.js";
 import type { Prisma, UserProfile } from "@prisma/client";
 import type { ProfileListSchemaType } from "./user-profile.schema.js";
 
@@ -11,35 +12,41 @@ export interface UserProfileRepository {
     data: Omit<Prisma.UserProfileUpdateInput, "createdAt">
   ): Promise<UserProfile>;
   delete(id: string): Promise<UserProfile>;
-  findAll(options: ProfileListSchemaType): Promise<UserProfile[]>;
+  findAll(options: ProfileListSchemaType): Promise<PaginatedResult<UserProfile>>;
 }
 
-class UserProfileRepositoryImpl implements UserProfileRepository {
+
+class UserProfileRepositoryImpl extends BaseRepository<UserProfile, typeof database.userProfile> implements UserProfileRepository {
+  constructor() {
+    super(database.userProfile);
+  }
+
   findById(id: string) {
-    return database.userProfile.findUnique({ where: { id } });
+    return this.model.findUnique({ where: { id } });
   }
 
   findByEmail(email: string) {
-    return database.userProfile.findUnique({ where: { email } });
+    return this.model.findUnique({ where: { email } });
   }
 
   create(data: Prisma.UserProfileCreateInput) {
-    return database.userProfile.create({ data });
+    return this.model.create({ data });
   }
 
   update(id: string, data: Omit<Prisma.UserProfileUpdateInput, "createdAt">) {
-    return database.userProfile.update({ where: { id }, data });
+    return this.model.update({ where: { id }, data });
   }
 
   delete(id: string) {
-    return database.userProfile.delete({ where: { id } });
+    return this.model.delete({ where: { id } });
   }
 
-  findAll({ page, pageSize }: ProfileListSchemaType) {
-    return database.userProfile.findMany({
-      skip: (page - 1) * pageSize,
-      take: pageSize,
+  findAll(options: ProfileListSchemaType) {
+    return this.findAllPaginated({
+      page: options.page,
+      pageSize: options.pageSize,
       orderBy: { createdAt: "desc" },
+      // Add 'where' if you want to support filtering
     });
   }
 }

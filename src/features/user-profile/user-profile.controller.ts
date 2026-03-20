@@ -18,8 +18,16 @@ export class UserProfileController {
     requireAuthentication(req, res);
     try {
       const query = await validateQuery(ProfileListSchema, req, res);
-      const profiles = await this.userProfileService.findAll(query);
-      return res.status(200).json({ message: MESSAGES.USER_PROFILES_RETRIEVED, profiles });
+      const result = await this.userProfileService.findAll(query);
+      return res.status(200).json({
+        message: MESSAGES.USER_PROFILES_RETRIEVED,
+        profiles: result.data,
+        meta: {
+          total: result.total,
+          page: result.page,
+          pageSize: result.pageSize,
+        },
+      });
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }
