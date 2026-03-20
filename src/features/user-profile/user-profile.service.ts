@@ -1,6 +1,6 @@
-import { userProfileRepository } from "./user-profile.repository.js";
 import { removeUndefinedFields } from "@/src/utils/removeUndefinedValues.js";
 import { MESSAGES } from "./user-profile.constant.js";
+import { userProfileRepository } from "./user-profile.repository.js";
 import type { ProfileListSchemaType } from "./user-profile.schema.js";
 
 export class UserProfileService {

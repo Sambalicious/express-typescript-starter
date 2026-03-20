@@ -1,10 +1,6 @@
-
 import { database } from "@/database.js";
-import type { PaginatedResult } from "@/src/utils/baseRepository.js";
-import { BaseRepository } from "@/src/utils/baseRepository.js";
 import type { Prisma, UserProfile } from "@prisma/client";
 import type { ProfileListSchemaType } from "./user-profile.schema.js";
-
 
 export interface UserProfileRepository {
   findById(id: string): Promise<UserProfile | null>;
@@ -15,42 +11,35 @@ export interface UserProfileRepository {
     data: Omit<Prisma.UserProfileUpdateInput, "createdAt">
   ): Promise<UserProfile>;
   delete(id: string): Promise<UserProfile>;
-  findAll(options: ProfileListSchemaType): Promise<PaginatedResult<UserProfile>>;
+  findAll(options: ProfileListSchemaType): Promise<UserProfile[]>;
 }
 
-
-class UserProfileRepositoryImpl extends BaseRepository<UserProfile, typeof database.userProfile> implements UserProfileRepository {
-  constructor() {
-    super(database.userProfile);
-  }
-
+class UserProfileRepositoryImpl implements UserProfileRepository {
   findById(id: string) {
-    return this.model.findUnique({ where: { id } });
+    return database.userProfile.findUnique({ where: { id } });
   }
 
   findByEmail(email: string) {
-    return this.model.findUnique({ where: { email } });
+    return database.userProfile.findUnique({ where: { email } });
   }
 
   create(data: Prisma.UserProfileCreateInput) {
-    return this.model.create({ data });
+    return database.userProfile.create({ data });
   }
 
   update(id: string, data: Omit<Prisma.UserProfileUpdateInput, "createdAt">) {
-    return this.model.update({ where: { id }, data });
+    return database.userProfile.update({ where: { id }, data });
   }
 
   delete(id: string) {
-    return this.model.delete({ where: { id } });
+    return database.userProfile.delete({ where: { id } });
   }
 
-  findAll(options: ProfileListSchemaType) {
-    // You can map ProfileListSchemaType to PaginationOptions as needed
-    return this.findAllPaginated({
-      page: options.page,
-      pageSize: options.pageSize,
+  findAll({ page, pageSize }: ProfileListSchemaType) {
+    return database.userProfile.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       orderBy: { createdAt: "desc" },
-      // Add 'where' if you want to support filtering
     });
   }
 }

@@ -1,10 +1,10 @@
 
+import type { UserProfileService } from "@/src/features/user-profile/user-profile.service.js";
 import { requireAuthentication } from "@/src/middleware/require-authentication.js";
 import { validateBody, validateParams, validateQuery } from "@/src/middleware/validate.js";
 import type { Request, Response } from "express";
 import { MESSAGES } from "./user-profile.constant.js";
 import { ProfileListSchema, ProfileParamsSchema, UpdateProfileSchema } from "./user-profile.schema.js";
-import { UserProfileService } from "./user-profile.service.js";
 
 export class UserProfileController {
   constructor(private userProfileService: UserProfileService) {
