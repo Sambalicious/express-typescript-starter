@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { mapPrismaError } from "@/src/utils/prismaError.js";
+import { mapPrismaError } from "@/src/utils/prismaError";
 
 export interface AppError extends Error {
   status?: number;

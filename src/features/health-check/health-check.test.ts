@@ -1,7 +1,7 @@
 import request from "supertest";
 import { describe, expect, test } from "vitest";
 
-import { buildApp } from "@/src/app.js";
+import { buildApp } from "@/src/app";
 describe("/api/v1/health-check", () => {
   test("should pass a basic test", async () => {
     // Placeholder test

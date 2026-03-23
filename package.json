@@ -2,7 +2,6 @@
   "name": "express-typescript",
   "version": "1.0.0",
   "description": "start template for express with typescript",
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "build": "tsc",

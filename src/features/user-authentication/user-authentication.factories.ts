@@ -1,4 +1,4 @@
-import type { Factory } from "@/src/utils/types.js";
+import type { Factory } from "@/src/utils/types";
 import { faker } from "@faker-js/faker";
 import { createId } from "@paralleldrive/cuid2";
 import type { UserProfile } from "@prisma/client";

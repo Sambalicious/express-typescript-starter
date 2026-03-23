@@ -1,8 +1,8 @@
-import { asyncHandler } from "@/src/utils/asyncHandler.js";
+import { asyncHandler } from "@/src/utils/asyncHandler";
 import { Router } from "express";
 
-import { UserAuthenticationController } from "./user-authentication.controller.js";
-import { UserAuthenticationService } from "./user-authentication.service.js";
+import { UserAuthenticationController } from "./user-authentication.controller";
+import { UserAuthenticationService } from "./user-authentication.service";
 
 const authService = new UserAuthenticationService();
 const authController = new UserAuthenticationController(authService);

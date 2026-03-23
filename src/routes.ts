@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { healthCheckRoutes } from "./features/health-check/health-check.routes.js";
-import { userAuthenticationRoutes } from "./features/user-authentication/user-authentication.routes.js";
-import { userProfileRoutes } from "./features/user-profile/user-profile.routes.js";
+import { healthCheckRoutes } from "./features/health-check/health-check.routes";
+import { userAuthenticationRoutes } from "./features/user-authentication/user-authentication.routes";
+import { userProfileRoutes } from "./features/user-profile/user-profile.routes";
 
 export const apiV1Router: Router = Router();
 

@@ -1,9 +1,9 @@
 import cookieParser from "cookie-parser";
 import type { Express } from "express";
 import express from "express";
-import { errorHandler } from "./middleware/error-handler.js";
-import { apiV1Router } from "./routes.js";
-import { setupSwagger, swaggerDocument } from "./utils/swagger.js";
+import { errorHandler } from "./middleware/error-handler";
+import { apiV1Router } from "./routes";
+import { setupSwagger, swaggerDocument } from "./utils/swagger";
 
 export function buildApp(): Express {
   const app = express();

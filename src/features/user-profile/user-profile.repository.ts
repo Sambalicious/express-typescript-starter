@@ -1,7 +1,7 @@
-import { database } from "@/database.js";
-import { BaseRepository, type PaginatedResult } from "@/src/utils/baseRepository.js";
+import { database } from "@/database";
+import { BaseRepository, type PaginatedResult } from "@/src/utils/baseRepository";
 import type { Prisma, UserProfile } from "@prisma/client";
-import type { ProfileListSchemaType } from "./user-profile.schema.js";
+import type { ProfileListSchemaType } from "./user-profile.schema";
 
 export interface UserProfileRepository {
   findById(id: string): Promise<UserProfile | null>;

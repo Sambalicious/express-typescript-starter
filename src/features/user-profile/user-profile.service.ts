@@ -1,7 +1,7 @@
-import { removeUndefinedFields } from "@/src/utils/removeUndefinedValues.js";
-import { MESSAGES } from "./user-profile.constant.js";
-import { userProfileRepository } from "./user-profile.repository.js";
-import type { ProfileListSchemaType } from "./user-profile.schema.js";
+import { removeUndefinedFields } from "@/src/utils/removeUndefinedValues";
+import { MESSAGES } from "./user-profile.constant";
+import { userProfileRepository } from "./user-profile.repository";
+import type { ProfileListSchemaType } from "./user-profile.schema";
 
 export class UserProfileService {
   async findAll(query: ProfileListSchemaType) {

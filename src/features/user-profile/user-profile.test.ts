@@ -1,13 +1,13 @@
-import { buildApp } from "@/src/app.js";
+import { buildApp } from "@/src/app";
 import request from "supertest";
 import { describe, expect, onTestFinished, test } from "vitest";
-import { createFakeUserProfile } from "../user-authentication/user-authentication.factories.js";
+import { createFakeUserProfile } from "../user-authentication/user-authentication.factories";
 import {
   generateJwtToken,
   JWT_COOKIE_NAME,
-} from "../user-authentication/user-authentication.helpers.js";
-import { MESSAGES } from "./user-profile.constant.js";
-import { userProfileRepository } from "./user-profile.repository.js";
+} from "../user-authentication/user-authentication.helpers";
+import { MESSAGES } from "./user-profile.constant";
+import { userProfileRepository } from "./user-profile.repository";
 interface SetUpOptions {
   numberOfProfiles?: number;
 }

@@ -1,7 +1,7 @@
 
-import { validateBody } from "@/src/middleware/validate.js";
+import { validateBody } from "@/src/middleware/validate";
 import type { Request, Response } from "express";
-import { MESSAGES } from "./user-authentication.constant.js";
+import { MESSAGES } from "./user-authentication.constant";
 import {
   clearJwtCookie,
   clearRefreshTokenCookie,
@@ -10,9 +10,9 @@ import {
   getRefreshTokenFromCookie,
   setJwtCookie,
   setRefreshTokenCookie,
-} from "./user-authentication.helpers.js";
-import { LoginSchema, RegisterSchema } from "./user-authentication.schema.js";
-import { UserAuthenticationService } from "./user-authentication.service.js";
+} from "./user-authentication.helpers";
+import { LoginSchema, RegisterSchema } from "./user-authentication.schema";
+import { UserAuthenticationService } from "./user-authentication.service";
 
 /**
  * UserAuthenticationController Class

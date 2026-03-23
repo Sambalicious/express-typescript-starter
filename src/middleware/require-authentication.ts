@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { getJwtTokenFromCookie } from "../features/user-authentication/user-authentication.helpers.js";
+import { getJwtTokenFromCookie } from "../features/user-authentication/user-authentication.helpers";
 
 export function requireAuthentication(request: Request, res: Response) {
   try {

@@ -1,8 +1,8 @@
-import { asyncHandler } from "@/src/utils/asyncHandler.js";
+import { asyncHandler } from "@/src/utils/asyncHandler";
 import { Router } from "express";
 
-import { UserProfileService } from "@/src/features/user-profile/user-profile.service.js";
-import { UserProfileController } from "./user-profile.controller.js";
+import { UserProfileService } from "@/src/features/user-profile/user-profile.service";
+import { UserProfileController } from "./user-profile.controller";
 
 
 const userProfileService = new UserProfileService();

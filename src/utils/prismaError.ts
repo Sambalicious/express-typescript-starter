@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import type { AppError } from "@/src/middleware/error-handler.js";
+import type { AppError } from "@/src/middleware/error-handler";
 
 export function mapPrismaError(error: unknown): AppError | null {
   if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {

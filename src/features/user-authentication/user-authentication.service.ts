@@ -1,7 +1,7 @@
-import { userProfileRepository } from "../user-profile/user-profile.repository.js";
-import { MESSAGES } from "./user-authentication.constant.js";
-import { hashPassword, isPasswordValid } from "./user-authentication.helpers.js";
-import { LoginSchema, RegisterSchema } from "./user-authentication.schema.js";
+import { userProfileRepository } from "@/src/features/user-profile/user-profile.repository";
+import { MESSAGES } from "./user-authentication.constant";
+import { hashPassword, isPasswordValid } from "./user-authentication.helpers";
+import { LoginSchema, RegisterSchema } from "./user-authentication.schema";
 import type { z } from "zod";
 
 type LoginSchemaType = z.infer<typeof LoginSchema>;

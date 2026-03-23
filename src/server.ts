@@ -1,5 +1,5 @@
 import morgan from "morgan";
-import { buildApp } from "./app.js";
+import { buildApp } from "./app";
 
 const app = buildApp();
 const PORT = process.env.PORT || 4000;

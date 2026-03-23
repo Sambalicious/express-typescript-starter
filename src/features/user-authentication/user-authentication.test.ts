@@ -1,10 +1,10 @@
-import { buildApp } from "@/src/app.js";
+import { buildApp } from "@/src/app";
 import request from "supertest";
 import { describe, expect, onTestFinished, test } from "vitest";
-import { userProfileRepository } from "../user-profile/user-profile.repository.ts";
-import { MESSAGES } from "./user-authentication.constant.js";
-import { createFakeUserProfile } from "./user-authentication.factories.js";
-import { hashPassword } from "./user-authentication.helpers.js";
+import { userProfileRepository } from "../user-profile/user-profile.repository";
+import { MESSAGES } from "./user-authentication.constant";
+import { createFakeUserProfile } from "./user-authentication.factories";
+import { hashPassword } from "./user-authentication.helpers";
 import { faker } from "@faker-js/faker";
 interface SetUp {
   password: string;

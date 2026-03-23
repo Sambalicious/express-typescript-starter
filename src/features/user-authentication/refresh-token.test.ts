@@ -1,15 +1,15 @@
-import { buildApp } from "@/src/app.js";
+import { buildApp } from "@/src/app";
 import jwt from "jsonwebtoken";
 import request from "supertest";
 import { describe, expect, test } from "vitest";
-import { userProfileRepository } from "../user-profile/user-profile.repository.ts";
-import { MESSAGES } from "./user-authentication.constant.js";
-import { createFakeUserProfile } from "./user-authentication.factories.js";
+import { userProfileRepository } from "../user-profile/user-profile.repository";
+import { MESSAGES } from "./user-authentication.constant";
+import { createFakeUserProfile } from "./user-authentication.factories";
 import {
   generateRefreshToken,
   JWT_COOKIE_NAME,
   REFRESH_TOKEN_COOKIE_NAME,
-} from "./user-authentication.helpers.js";
+} from "./user-authentication.helpers";
 
 describe("/refresh", () => {
   test("should issue a new access token when given a valid refresh token cookie", async () => {
