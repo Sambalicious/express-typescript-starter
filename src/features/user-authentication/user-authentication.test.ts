@@ -1,16 +1,17 @@
 import { buildApp } from "@/src/app";
+import { UserProfileRepository } from "@/src/features/user-profile/user-profile.repository";
+import { faker } from "@faker-js/faker";
 import request from "supertest";
 import { describe, expect, onTestFinished, test } from "vitest";
-import { userProfileRepository } from "../user-profile/user-profile.repository";
 import { MESSAGES } from "./user-authentication.constant";
 import { createFakeUserProfile } from "./user-authentication.factories";
 import { hashPassword } from "./user-authentication.helpers";
-import { faker } from "@faker-js/faker";
 interface SetUp {
   password: string;
 }
 async function setUp({ password }: SetUp) {
   const app = buildApp();
+  const userProfileRepository = new UserProfileRepository();
   const savedUser = await userProfileRepository.create(
     createFakeUserProfile({
       hashedPassword: await hashPassword(password),

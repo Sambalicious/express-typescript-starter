@@ -7,7 +7,9 @@ import {
   JWT_COOKIE_NAME,
 } from "../user-authentication/user-authentication.helpers";
 import { MESSAGES } from "./user-profile.constant";
-import { userProfileRepository } from "./user-profile.repository";
+import { UserProfileRepository } from "./user-profile.repository";
+
+const userProfileRepository = new UserProfileRepository();
 interface SetUpOptions {
   numberOfProfiles?: number;
 }

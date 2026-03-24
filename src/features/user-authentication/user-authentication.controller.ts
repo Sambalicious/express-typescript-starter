@@ -41,6 +41,7 @@ export class UserAuthenticationController {
       setRefreshTokenCookie(res, refreshToken);
       return res.status(200).json({ message: MESSAGES.LOGIN_SUCCESS });
     } catch (error: any) {
+      if (res.headersSent) return;
       return res.status(401).json({ message: error.message || MESSAGES.INVALID_CREDENTIALS });
     }
   }
@@ -59,6 +60,7 @@ export class UserAuthenticationController {
       setRefreshTokenCookie(res, refreshToken);
       return res.status(201).json({ message: MESSAGES.REGISTRATION_SUCCESS, userId: userProfile.id });
     } catch (error: any) {
+      if (res.headersSent) return;
       return res.status(409).json({ message: error.message || MESSAGES.ALREADY_IN_USE });
     }
   }

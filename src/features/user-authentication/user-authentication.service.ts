@@ -1,15 +1,18 @@
-import { userProfileRepository } from "@/src/features/user-profile/user-profile.repository";
+import { IUserProfileRepository } from "@/src/features/user-profile/user-profile.repository";
+import type { z } from "zod";
 import { MESSAGES } from "./user-authentication.constant";
 import { hashPassword, isPasswordValid } from "./user-authentication.helpers";
 import { LoginSchema, RegisterSchema } from "./user-authentication.schema";
-import type { z } from "zod";
 
 type LoginSchemaType = z.infer<typeof LoginSchema>;
 type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 
 export class UserAuthenticationService {
+  constructor(private userRepository : IUserProfileRepository) {
+    
+  }
   async login(body: LoginSchemaType) {
-    const user = await userProfileRepository.findByEmail(body.email);
+    const user = await this.userRepository.findByEmail(body.email);
     if (!user) {
       throw new Error(MESSAGES.INVALID_CREDENTIALS);
     }
@@ -21,12 +24,12 @@ export class UserAuthenticationService {
   }
 
   async register(body: RegisterSchemaType) {
-    const existingUser = await userProfileRepository.findByEmail(body.email);
+    const existingUser = await this.userRepository.findByEmail(body.email);
     if (existingUser) {
       throw new Error(MESSAGES.ALREADY_IN_USE);
     }
     const hashedPassword = await hashPassword(body.password);
-    return userProfileRepository.create({
+    return this.userRepository.create({
       email: body.email,
       hashedPassword,
       name: body.name,
@@ -34,7 +37,7 @@ export class UserAuthenticationService {
   }
 
   async refreshToken(user: { email: string }) {
-    const existingUser = await userProfileRepository.findByEmail(user.email);
+    const existingUser = await this.userRepository.findByEmail(user.email);
     if (!existingUser) {
       throw new Error(MESSAGES.INVALID_REFRESH_TOKEN);
     }

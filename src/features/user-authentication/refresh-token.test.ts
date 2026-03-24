@@ -2,7 +2,9 @@ import { buildApp } from "@/src/app";
 import jwt from "jsonwebtoken";
 import request from "supertest";
 import { describe, expect, test } from "vitest";
-import { userProfileRepository } from "../user-profile/user-profile.repository";
+import { UserProfileRepository } from "../user-profile/user-profile.repository";
+
+const userProfileRepository = new UserProfileRepository();
 import { MESSAGES } from "./user-authentication.constant";
 import { createFakeUserProfile } from "./user-authentication.factories";
 import {

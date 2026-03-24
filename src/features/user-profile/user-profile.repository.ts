@@ -3,7 +3,7 @@ import { BaseRepository, type PaginatedResult } from "@/src/utils/baseRepository
 import type { Prisma, UserProfile } from "@prisma/client";
 import type { ProfileListSchemaType } from "./user-profile.schema";
 
-export interface UserProfileRepository {
+export interface IUserProfileRepository {
   findById(id: string): Promise<UserProfile | null>;
   findByEmail(email: string): Promise<UserProfile | null>;
   create(data: Prisma.UserProfileCreateInput): Promise<UserProfile>;
@@ -16,7 +16,7 @@ export interface UserProfileRepository {
 }
 
 
-class UserProfileRepositoryImpl extends BaseRepository<UserProfile, typeof database.userProfile> implements UserProfileRepository {
+export class UserProfileRepository extends BaseRepository<UserProfile, typeof database.userProfile> implements IUserProfileRepository {
   constructor() {
     super(database.userProfile);
   }
@@ -51,4 +51,3 @@ class UserProfileRepositoryImpl extends BaseRepository<UserProfile, typeof datab
   }
 }
 
-export const userProfileRepository = new UserProfileRepositoryImpl();
